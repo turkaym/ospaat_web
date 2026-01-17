@@ -6,7 +6,7 @@ The main goal of the website is to provide clear institutional information and t
 
 ---
 
-## 🧩 Project Overview
+## Project Overview
 
 The website includes:
 
@@ -18,7 +18,7 @@ The website includes:
 
 ---
 
-## 📄 Public Pages
+## Public Pages
 
 - **Home** – Institutional presentation and highlights
 - **About Us** – History, mission, and values
@@ -28,7 +28,7 @@ The website includes:
 
 ---
 
-## 🔐 Admin Panel
+## Admin Panel
 
 The admin panel allows authorized users to:
 
@@ -43,7 +43,7 @@ Only authenticated administrators can access this panel.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - HTML5
@@ -58,75 +58,4 @@ Only authenticated administrators can access this panel.
 
 ---
 
-## 📁 Project Structure
 
-ospaat_web/
-│
-├── README.md
-├── .gitignore
-├── .env.example
-│
-├── backend/
-│   ├── .venv/
-│   ├── .env
-│   ├── requirements.txt
-│   ├── main.py
-│   │
-│   └── app/
-│       ├── __init__.py
-│       │
-│       ├── core/
-│       │   ├── config.py
-│       │   ├── security.py
-│       │   └── database.py
-│       │
-│       ├── models/
-│       │   ├── __init__.py
-│       │   ├── user.py
-│       │   └── news.py
-│       │
-│       ├── schemas/
-│       │   ├── __init__.py
-│       │   ├── user.py
-│       │   └── news.py
-│       │
-│       ├── routers/
-│       │   ├── __init__.py
-│       │   ├── auth.py
-│       │   ├── news.py
-│       │   └── admin_news.py
-│       │
-│       ├── services/
-│       │   ├── __init__.py
-│       │   └── news_service.py
-│       │
-│       └── utils/
-│           ├── __init__.py
-│           └── jwt.py
-│
-├── frontend/
-│   ├── public/
-│   │   ├── index.html
-│   │   ├── nosotros.html
-│   │   ├── planes.html
-│   │   ├── servicios.html
-│   │   ├── noticias.html
-│   │   └── noticia.html
-│   │
-│   ├── admin/
-│   │   ├── login.html
-│   │   └── dashboard.html
-│   │
-│   ├── css/
-│   │   ├── main.css
-│   │   └── admin.css
-│   │
-│   └── js/
-│       ├── main.js
-│       ├── noticias.js
-│       ├── noticia.js
-│       ├── admin_login.js
-│       └── admin_dashboard.js
-│
-└── docs/
-    └── arquitectura.md
