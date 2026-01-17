@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const dateEl = document.getElementById("news-date");
     const content = document.getElementById("news-content");
 
+    title.textContent = "Cargando noticia…";
+
     if (!id) {
         title.textContent = "Noticia no encontrada";
         return;
@@ -17,6 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return res.json();
         })
         .then(news => {
+            // SEO dinámico
+            document.title = `${news.title} | OSP AAT`;
+            const meta = document.querySelector('meta[name="description"]');
+            if (meta) meta.setAttribute("content", news.summary || "");
+
             title.textContent = news.title;
             content.innerHTML = news.content;
 
@@ -25,8 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .toLocaleDateString("es-AR");
             }
         })
-        .catch(err => {
-            console.error(err);
+        .catch(() => {
             title.textContent = "Noticia no encontrada";
             content.innerHTML = "<p>La noticia no existe o no está publicada.</p>";
         });
