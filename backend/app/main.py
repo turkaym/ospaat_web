@@ -1,25 +1,49 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
 
-from app.core.config import CORS_ORIGINS, APP_NAME, DEBUG
+from app.core.database import init_db_pool, get_db_connection
+
+
+# =========================
+# Load environment variables
+# =========================
+load_dotenv()
+
+ENV = os.getenv("ENV", "development")
+DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
 app = FastAPI(
-    title=APP_NAME,
-    debug=DEBUG
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    title="OSP AAT API",
+    version="0.1.0",
+    debug=DEBUG,
 )
 
 
-@app.get("/", tags=["Health"])
-def healthcheck():
+@app.on_event("startup")
+def startup_event():
+    try:
+        init_db_pool()
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+        cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        print("✅ Database connection successful")
+
+    except Exception as e:
+        print("❌ Database connection failed")
+        print(e)
+        raise
+
+
+@app.get("/")
+def root():
     return {
-        "status": "ok",
-        "service": APP_NAME
+        "project": "OSP AAT",
+        "status": "backend running",
+        "environment": ENV,
     }
