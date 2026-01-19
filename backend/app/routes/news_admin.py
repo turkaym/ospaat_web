@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from app.core.roles import require_role
 from app.models.news import create_news
 from app.models.news import soft_delete_news
+from app.models.news import get_all_news
 from app.models.user import User
 from app.schemas.news import NewsCreate
 
@@ -72,4 +73,22 @@ def delete_news_endpoint(
     return {
         "message": "News soft deleted",
         "news_id": news_id
+    }
+
+
+@router.get("/")
+def list_all_news_admin(
+    page: int = 1,
+    limit: int = 20,
+    current_user: User = Depends(require_role("admin", "editor")),
+):
+    offset = (page - 1) * limit
+
+    news = get_all_news(limit=limit, offset=offset)
+
+    return {
+        "page": page,
+        "limit": limit,
+        "count": len(news),
+        "items": news
     }

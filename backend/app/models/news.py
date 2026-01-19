@@ -180,3 +180,28 @@ def create_news(
     conn.close()
 
     return news_id
+
+
+def get_all_news(
+    limit: int = 20,
+    offset: int = 0
+) -> list[News]:
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+        SELECT id, title, summary, content,
+               is_published, is_deleted,
+               created_at, updated_at, published_at, deleted_at
+        FROM news
+        ORDER BY created_at DESC
+        LIMIT %s OFFSET %s
+    """
+
+    cursor.execute(query, (limit, offset))
+    rows = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return [News(**row) for row in rows]
