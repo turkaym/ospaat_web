@@ -1,3 +1,5 @@
+from app.core.database import get_db_connection
+from datetime import datetime
 from fastapi import APIRouter, Query, HTTPException
 from typing import List
 from app.models.news import get_published_news
@@ -31,3 +33,24 @@ def get_news(news_id: int):
         raise HTTPException(status_code=404, detail="News not found")
 
     return news
+
+
+def create_news(title: str, summary: str, content: str) -> int:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO news (title, summary, content, is_published, created_at)
+        VALUES (%s, %s, %s, %s, %s)
+        """,
+        (title, summary, content, False, datetime.utcnow()),
+    )
+
+    conn.commit()
+    news_id = cursor.lastrowid
+
+    cursor.close()
+    conn.close()
+
+    return news_id

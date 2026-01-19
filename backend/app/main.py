@@ -5,6 +5,7 @@ from app.core.database import init_db_pool, get_db_connection
 from app.routes.auth import router as auth_router
 from app.routes.news import router as news_router
 from app.routes.admin import router as admin_router  # De prueba
+from app.routes.news_admin import router as news_admin_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import os
@@ -43,6 +44,7 @@ app.add_middleware(
 app.include_router(news_router)
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(news_admin_router)
 
 
 # =========================
