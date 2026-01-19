@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 
 from app.core.roles import require_role
 from app.models.news import create_news
+from app.models.news import soft_delete_news
 from app.models.user import User
 from app.schemas.news import NewsCreate
 
@@ -51,5 +52,24 @@ def update_news_endpoint(
 
     return {
         "message": "News updated successfully",
+        "news_id": news_id
+    }
+
+
+@router.delete("/{news_id}")
+def delete_news_endpoint(
+    news_id: int,
+    current_user: User = Depends(require_role("admin", "editor")),
+):
+    deleted = soft_delete_news(news_id)
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="News not found or already deleted"
+        )
+
+    return {
+        "message": "News soft deleted",
         "news_id": news_id
     }

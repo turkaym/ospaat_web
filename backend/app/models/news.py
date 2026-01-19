@@ -12,9 +12,11 @@ class News:
     summary: Optional[str]
     content: str
     is_published: bool
+    is_deleted: bool
     created_at: datetime
     updated_at: datetime
     published_at: Optional[datetime]
+    deleted_at: Optional[datetime]
 
 
 def get_published_news(limit: int = 10, offset: int = 0) -> list[News]:
@@ -23,9 +25,11 @@ def get_published_news(limit: int = 10, offset: int = 0) -> list[News]:
 
     query = """
         SELECT id, title, summary, content,
-               is_published, created_at, updated_at, published_at
+            is_published, is_deleted,
+            created_at, updated_at, published_at, deleted_at
         FROM news
         WHERE is_published = TRUE
+        AND is_deleted = FALSE
         ORDER BY published_at DESC, created_at DESC
         LIMIT %s OFFSET %s
     """
@@ -45,9 +49,11 @@ def get_news_by_id(news_id: int) -> Optional[News]:
 
     query = """
         SELECT id, title, summary, content,
-               is_published, created_at, updated_at, published_at
+               is_published, is_deleted,
+               created_at, updated_at, published_at, deleted_at
         FROM news
         WHERE id = %s
+        AND is_deleted = FALSE
         LIMIT 1
     """
 
@@ -61,36 +67,6 @@ def get_news_by_id(news_id: int) -> Optional[News]:
         return None
 
     return News(**row)
-
-
-def create_news(
-    title: str,
-    content: str,
-    summary: str | None,
-    is_published: bool,
-) -> int:
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    query = """
-        INSERT INTO news (title, summary, content, is_published, published_at)
-        VALUES (%s, %s, %s, %s, %s)
-    """
-
-    published_at = datetime.utcnow() if is_published else None
-
-    cursor.execute(
-        query,
-        (title, summary, content, is_published, published_at)
-    )
-
-    news_id = cursor.lastrowid
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return news_id
 
 
 def update_news(
@@ -136,6 +112,7 @@ def update_news(
         UPDATE news
         SET {", ".join(fields)}, updated_at = NOW()
         WHERE id = %s
+        AND is_deleted = FALSE
     """
 
     cursor.execute(query, values)
@@ -147,3 +124,59 @@ def update_news(
     conn.close()
 
     return updated
+
+
+def soft_delete_news(news_id: int) -> bool:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        UPDATE news
+        SET is_deleted = TRUE,
+            deleted_at = NOW(),
+            is_published = FALSE,
+            published_at = NULL,
+            updated_at = NOW()
+        WHERE id = %s
+        AND is_deleted = FALSE
+    """
+
+    cursor.execute(query, (news_id,))
+    conn.commit()
+
+    deleted = cursor.rowcount > 0
+
+    cursor.close()
+    conn.close()
+
+    return deleted
+
+
+def create_news(
+    title: str,
+    content: str,
+    summary: str | None,
+    is_published: bool,
+) -> int:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        INSERT INTO news (title, summary, content, is_published, published_at)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+
+    published_at = datetime.utcnow() if is_published else None
+
+    cursor.execute(
+        query,
+        (title, summary, content, is_published, published_at)
+    )
+
+    news_id = cursor.lastrowid
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return news_id
