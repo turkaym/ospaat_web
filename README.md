@@ -56,6 +56,13 @@ Only authenticated administrators can access this panel.
 - MySQL
 - JWT Authentication
 
+## Development
+
+Run the API with environment variables loaded:
+
+uvicorn app.main:app --reload --env-file .env
+
+
 ---
 
 

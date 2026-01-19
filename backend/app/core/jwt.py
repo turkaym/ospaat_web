@@ -1,82 +1,74 @@
 """
 JWT utilities for token encoding and decoding.
 
-This module is intentionally framework-agnostic.
+Framework-agnostic module:
 - No FastAPI
-- No middleware
-- No DB access
+- No DB
+- No settings object
 
-Defines the standard JWT behavior for the entire project.
+Uses environment variables only.
 """
 
-from datetime import datetime, timedelta, timezone
+import os
+from datetime import datetime, timedelta
 from typing import Any, Dict
 
 from jose import JWTError, jwt
 
 # =========================
-# JWT CONFIG
+# JWT CONFIG (ENV)
 # =========================
 
-JWT_ALGORITHM = "HS256"
+JWT_SECRET = os.getenv("JWT_SECRET")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "60"))
 
+
+# =========================
+# TOKEN CREATION
+# =========================
 
 def create_access_token(
-    data: Dict[str, Any],
-    secret_key: str,
-    expires_minutes: int = 60,
+    subject: str,
+    extra_claims: dict | None = None,
+    expires_delta: timedelta | None = None
 ) -> str:
-    """
-    Create a signed JWT access token.
+    to_encode = {
+        "sub": subject,
+        "iat": datetime.utcnow()
+    }
 
-    Args:
-        data (dict): Payload data (e.g. {"sub": user_id, "role": "admin"})
-        secret_key (str): Secret key used to sign the token
-        expires_minutes (int): Token expiration time in minutes
+    if extra_claims:
+        to_encode.update(extra_claims)
 
-    Returns:
-        str: Encoded JWT token
-    """
-    if not secret_key:
-        raise ValueError("Secret key must be provided")
-
-    payload = data.copy()
-
-    expire = datetime.now(timezone.utc) + timedelta(minutes=expires_minutes)
-    payload["exp"] = expire
-
-    token = jwt.encode(
-        payload,
-        secret_key,
-        algorithm=JWT_ALGORITHM,
+    expire = datetime.utcnow() + (
+        expires_delta
+        if expires_delta
+        else timedelta(minutes=JWT_EXPIRE_MINUTES)
     )
 
-    return token
+    to_encode["exp"] = expire
+
+    encoded_jwt = jwt.encode(
+        to_encode,
+        JWT_SECRET,
+        algorithm=JWT_ALGORITHM
+    )
+
+    return encoded_jwt
 
 
-def decode_access_token(
-    token: str,
-    secret_key: str,
-) -> Dict[str, Any]:
-    """
-    Decode and validate a JWT access token.
+# =========================
+# TOKEN DECODING
+# =========================
 
-    Args:
-        token (str): JWT token string
-        secret_key (str): Secret key used to sign the token
-
-    Returns:
-        dict: Decoded token payload
-
-    Raises:
-        JWTError: If token is invalid or expired
-    """
-    if not token or not secret_key:
-        raise JWTError("Invalid token or secret key")
+def decode_access_token(token: str) -> Dict[str, Any]:
+    if not token:
+        raise JWTError("Token is required")
 
     payload = jwt.decode(
         token,
-        secret_key,
+        JWT_SECRET,
         algorithms=[JWT_ALGORITHM],
     )
 

@@ -36,3 +36,22 @@ def get_user_by_username(username: str) -> Optional[User]:
         return None
 
     return User(**row)
+
+
+def get_user_by_id(user_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT * FROM users WHERE id = %s",
+        (user_id,)
+    )
+    row = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if not row:
+        return None
+
+    return User(**row)
