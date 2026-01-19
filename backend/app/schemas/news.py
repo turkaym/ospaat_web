@@ -38,3 +38,7 @@ class NewsResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class NewsPublish(BaseModel):
+    is_published: bool

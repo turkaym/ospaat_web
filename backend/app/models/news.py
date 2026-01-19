@@ -205,3 +205,64 @@ def get_all_news(
     conn.close()
 
     return [News(**row) for row in rows]
+
+
+def restore_news(news_id: int) -> bool:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        UPDATE news
+        SET is_deleted = FALSE,
+            deleted_at = NULL,
+            updated_at = NOW()
+        WHERE id = %s
+        AND is_deleted = TRUE
+    """
+
+    cursor.execute(query, (news_id,))
+    conn.commit()
+
+    restored = cursor.rowcount > 0
+
+    cursor.close()
+    conn.close()
+
+    return restored
+
+
+def set_news_publish_state(
+    news_id: int,
+    is_published: bool
+) -> bool:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if is_published:
+        query = """
+            UPDATE news
+            SET is_published = TRUE,
+                published_at = NOW(),
+                updated_at = NOW()
+            WHERE id = %s
+            AND is_deleted = FALSE
+        """
+    else:
+        query = """
+            UPDATE news
+            SET is_published = FALSE,
+                published_at = NULL,
+                updated_at = NOW()
+            WHERE id = %s
+            AND is_deleted = FALSE
+        """
+
+    cursor.execute(query, (news_id,))
+    conn.commit()
+
+    updated = cursor.rowcount > 0
+
+    cursor.close()
+    conn.close()
+
+    return updated
