@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | OSP AAT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+
+    <header class="admin-header">
+        <h1>Panel de Noticias</h1>
+        <div>
+            <a href="news-form.html" class="btn">+ Nueva noticia</a>
+            <button id="logout-btn" class="btn danger">Salir</button>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Estado</th>
+                    <th>Visibilidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="news-table-body">
+                <tr>
+                    <td colspan="4">Cargando noticias…</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <script type="module" src="../js/dashboard.js"></script>
+</body>
+
+</html>

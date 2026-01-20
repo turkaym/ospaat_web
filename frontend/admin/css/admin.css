@@ -1,0 +1,118 @@
+/* =========================
+   BASE
+========================= */
+body {
+    font-family: system-ui, Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* =========================
+   AUTH
+========================= */
+.admin-auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background: #fff;
+    padding: 2rem;
+    width: 320px;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+}
+
+.login-container h1 {
+    margin-bottom: 1.2rem;
+}
+
+.login-container label {
+    display: block;
+    margin-bottom: .8rem;
+}
+
+.login-container input {
+    width: 100%;
+    padding: .5rem;
+}
+
+.error {
+    color: #c00;
+    margin-top: .5rem;
+}
+
+/* =========================
+   HEADER
+========================= */
+.admin-header {
+    background: #003459;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn {
+    background: #0077b6;
+    color: #fff;
+    padding: .5rem .8rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn.primary {
+    background: #0077b6;
+}
+
+.btn.danger {
+    background: #c62828;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+.admin-container {
+    padding: 2rem;
+}
+
+/* =========================
+   TABLE
+========================= */
+.admin-table {
+    width: 100%;
+    background: #fff;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: .7rem;
+    border-bottom: 1px solid #ddd;
+}
+
+/* =========================
+   FORM
+========================= */
+.news-form label {
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.news-form input,
+.news-form textarea {
+    width: 100%;
+    padding: .6rem;
+}
