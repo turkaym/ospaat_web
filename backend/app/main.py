@@ -1,21 +1,15 @@
-# =========================
-# Load environment variables FIRST
-# =========================
+import os
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 from app.core.database import init_db_pool, get_db_connection
 from app.routes.auth import router as auth_router
 from app.routes.news import router as news_router
-from app.routes.admin import router as admin_router  # De prueba
+from app.routes.admin import router as admin_router
 from app.routes.news_admin import router as news_admin_router
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
-import os
 from dotenv import load_dotenv
 load_dotenv()
 
 
-# =========================
-# Environment
-# =========================
 ENV = os.getenv("ENV", "development")
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
@@ -25,9 +19,7 @@ app = FastAPI(
     debug=DEBUG,
 )
 
-# =========================
-# CORS
-# =========================
+
 origins = os.getenv("CORS_ORIGINS", "").split(",")
 
 app.add_middleware(
@@ -38,18 +30,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =========================
-# Routers
-# =========================
+
 app.include_router(news_router)
 app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(news_admin_router)
-
-
-# =========================
-# Startup – DB check
-# =========================
 
 
 @app.on_event("startup")
@@ -70,10 +55,6 @@ def startup_event():
         print("❌ Database connection failed")
         print(e)
         raise
-
-# =========================
-# Root
-# =========================
 
 
 @app.get("/")

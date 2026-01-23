@@ -1,5 +1,3 @@
-// frontend/admin/js/login.js
-
 import { API_BASE } from "../../shared/js/api.js";
 
 document.addEventListener("DOMContentLoaded", () => {

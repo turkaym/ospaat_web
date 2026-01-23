@@ -1,5 +1,3 @@
-# app/utils/audit.py
-
 from datetime import datetime
 from app.core.database import get_db_connection
 

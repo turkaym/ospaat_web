@@ -1,5 +1,3 @@
-// frontend/shared/js/auth.js
-
 export function requireAuth() {
     const token = localStorage.getItem("token");
 

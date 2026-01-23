@@ -1,6 +1,3 @@
-# app/services/news_service.py
-# app/services/news_service.py
-
 from app.utils.audit import log_action
 
 

@@ -3,9 +3,6 @@ from typing import Optional
 from datetime import datetime
 
 
-# =========================
-# CREATE
-# =========================
 class NewsCreate(BaseModel):
     title: str
     summary: Optional[str] = None
@@ -13,9 +10,6 @@ class NewsCreate(BaseModel):
     is_published: bool = False
 
 
-# =========================
-# UPDATE
-# =========================
 class NewsUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=3, max_length=255)
     summary: Optional[str] = Field(None, max_length=500)
@@ -23,9 +17,6 @@ class NewsUpdate(BaseModel):
     is_published: Optional[bool] = None
 
 
-# =========================
-# RESPONSE (ADMIN / API)
-# =========================
 class NewsResponse(BaseModel):
     id: int
     title: str

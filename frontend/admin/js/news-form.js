@@ -1,5 +1,3 @@
-// frontend/admin/js/news-form.js
-
 import { apiFetch } from "../../shared/js/api.js";
 import { requireAuth } from "../../shared/js/auth.js";
 

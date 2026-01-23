@@ -1,5 +1,3 @@
-// frontend/shared/js/api.js
-
 export const API_BASE = "http://127.0.0.1:8000";
 
 export async function apiFetch(endpoint, options = {}) {
@@ -18,7 +16,6 @@ export async function apiFetch(endpoint, options = {}) {
     if (response.status === 401) {
         localStorage.removeItem("token");
 
-        // Flag para mostrar mensaje
         sessionStorage.setItem("session_expired", "true");
 
         window.location.href = "/frontend/admin/pages/login.html";

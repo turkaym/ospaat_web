@@ -1,5 +1,3 @@
-// frontend/admin/js/dashboard.js
-
 import { apiFetch } from "../../shared/js/api.js";
 import { requireAuth, logout } from "../../shared/js/auth.js";
 
